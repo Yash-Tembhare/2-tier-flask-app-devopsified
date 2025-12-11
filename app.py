@@ -35,7 +35,10 @@ def hello():
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    new_message = request.form.get('new_message')
+    if request.is_json:
+        new_message = request.json.get('new_message')
+    else:
+        new_message = request.form.get('new_message')
     cur = mysql.connection.cursor()
     cur.execute('INSERT INTO messages (message) VALUES (%s)', [new_message])
     mysql.connection.commit()
